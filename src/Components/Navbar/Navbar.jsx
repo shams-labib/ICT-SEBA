@@ -187,7 +187,7 @@ const Navbar = () => {
             {navLinks}
           </ul>
 
-          {/* Sidebar Gradient Button */}
+          {/* Sidebar Gradient n */}
           <div className="mt-8">
             <button className="w-full py-3 rounded-full border-2 border-blue-500 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all">
               এখনই এনরোল করো
