@@ -23,16 +23,16 @@ const Navbar = () => {
     <div className="bg-black text-white px-6 py-4">
       <nav className="flex justify-between items-center">
         <h1>Logo</h1>
-        {/* Desktop View */}
-        <div className="hidden md:flex gap-6 ">{navLinks}</div>
+
+        {/* Desktop */}
+        <div className=" hidden md:flex gap-6">{navLinks}</div>
+
         {/* Mobile View */}
         <div className="md:hidden" onClick={() => setOpen(!open)}>
           {open ? <X size={28} /> : <Menu size={28} />}
         </div>
       </nav>
-      {open && (
-        <div className="flex flex-col mt-4 md:hidden gap-4">{navLinks}</div>
-      )}
+      {open && <div className="flex flex-col mt-4 gap-4">{navLinks}</div>}
     </div>
   );
 };
