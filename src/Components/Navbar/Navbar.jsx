@@ -24,7 +24,7 @@ const Navbar = () => {
       <nav className="flex justify-between items-center">
         <h1>Logo</h1>
 
-        {/* Desktop */}
+        {/* Desktop View */}
         <div className=" hidden md:flex gap-6">{navLinks}</div>
 
         {/* Mobile View */}
