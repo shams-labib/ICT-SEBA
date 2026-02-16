@@ -1,15 +1,68 @@
-import React from "react";
-import { ArrowRight, Monitor, GraduationCap, CheckCircle2 } from "lucide-react";
+import React, { useState, useLayoutEffect, useRef } from "react";
+import {
+  ArrowRight,
+  Monitor,
+  GraduationCap,
+  CheckCircle2,
+  X,
+  Sparkles,
+} from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
 const AboutSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const sectionRef = useRef(null);
+  const leftSideRef = useRef(null);
+  const rightSideRef = useRef(null);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Left side content animation
+      gsap.from(leftSideRef.current.children, {
+        x: -100,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+        },
+      });
+
+      // Right side image & card animation
+      gsap.from(rightSideRef.current, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative bg-white py-24 px-4 overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="relative bg-white py-24 px-4 overflow-hidden"
+    >
       {/* Background Decorative Element */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50 -z-10" />
 
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
         {/* Left Content Side */}
-        <div className="flex-1 text-left">
+        <div ref={leftSideRef} className="flex-1 text-left">
           <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-sm font-semibold px-4 py-2 rounded-full mb-6">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -28,7 +81,7 @@ const AboutSection = () => {
           <p className="text-slate-600 text-lg leading-relaxed mb-8 max-w-2xl">
             ICTSeba একটি পূর্ণাঙ্গ আইটি সলিউশন এবং ট্রেনিং প্ল্যাটফর্ম। আমরা
             একদিকে আধুনিক ব্যবসা ও ব্যক্তিগত প্রয়োজনে সফটওয়্যার সার্ভিস প্রদান
-            করি, অন্যদিকে দক্ষ জনশক্তি গড়তে আন্তর্জাতিক মানের আইটি কোর্স
+            করি, অন্যদিকে দক্ষ জনশক্তি গড়তে আন্তর্জাতিক মানের আইটি কোর্স
             পরিচালনা করি।
           </p>
 
@@ -56,7 +109,10 @@ const AboutSection = () => {
             </div>
           </div>
 
-          <button className="group flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-600 transition-all duration-300 shadow-lg shadow-slate-200">
+          <button
+            onClick={toggleModal}
+            className="group flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-600 transition-all duration-300 shadow-lg shadow-slate-200 active:scale-95"
+          >
             আরও জানুন
             <ArrowRight
               size={20}
@@ -66,7 +122,7 @@ const AboutSection = () => {
         </div>
 
         {/* Right Image Side */}
-        <div className="flex-1 relative">
+        <div ref={rightSideRef} className="flex-1 relative">
           <div className="relative z-10 w-full max-w-lg mx-auto">
             {/* Main Image */}
             <div className="relative rounded-3xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
@@ -91,12 +147,40 @@ const AboutSection = () => {
                 </p>
               </div>
             </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-purple-100 rounded-full -z-10 opacity-60 blur-xl"></div>
           </div>
         </div>
       </div>
+
+      {/* --- MODAL SECTION --- */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            onClick={toggleModal}
+          ></div>
+          <div className="relative bg-white rounded-3xl p-8 md:p-12 shadow-2xl max-w-sm w-full text-center animate-in zoom-in-95 duration-300">
+            <button
+              onClick={toggleModal}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X size={24} />
+            </button>
+            <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="text-blue-600" size={40} />
+            </div>
+            <h3 className="text-2xl font-black text-slate-800 mb-2">
+              Website Updated
+            </h3>
+            <p className="text-slate-500 font-medium text-lg">Coming Soon...</p>
+            <button
+              onClick={toggleModal}
+              className="mt-8 w-full py-3 bg-slate-900 text-white rounded-xl font-bold"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         @keyframes bounce-slow {

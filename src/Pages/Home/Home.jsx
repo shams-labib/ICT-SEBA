@@ -18,7 +18,6 @@ const Home = () => {
       <CourseContent />
       <ICTCourseLayout />
       <Testimonials />
-      <Newsletter />
     </div>
   );
 };

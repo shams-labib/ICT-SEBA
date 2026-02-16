@@ -1,16 +1,18 @@
-import React from "react";
-import { Star, BookOpen, Users, ShoppingCart, ArrowRight } from "lucide-react";
-
-// Import Swiper React components
+import React, { useState, useLayoutEffect, useRef } from "react";
+import {
+  Star,
+  BookOpen,
+  Users,
+  ShoppingCart,
+  ArrowRight,
+  X,
+  Sparkles,
+} from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-
-// Import required modules
-// Removed Navigation module
 import { Pagination, Autoplay } from "swiper/modules";
+import gsap from "gsap"; // Ensure gsap is installed
 
 const CourseCard = ({ course }) => {
   return (
@@ -96,6 +98,30 @@ const CourseCard = ({ course }) => {
 };
 
 const CourseSlider = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const sectionRef = useRef(null); // Ref for GSAP
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  // GSAP Fade Up Animation
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".animate-item", {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%", // Starts when top of section hits 80% of viewport
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const courses = [
     {
       id: 1,
@@ -104,8 +130,7 @@ const CourseSlider = () => {
       reviews: 0,
       lessons: 31,
       students: 1,
-      description:
-        "ঘরে বসেই সহজে শিখুন HSC ICT এর পূর্ণ সিলেবাস। লাইভ ক্লাস, রেকর্ডেড ভিডিও...",
+      description: "ঘরে বসেই সহজে শিখুন HSC ICT এর পূর্ণ সিলেবাস...",
       instructor: "ictseba",
       category: "একাডেমিক কোর্স",
       oldPrice: "1,500.00",
@@ -119,8 +144,7 @@ const CourseSlider = () => {
       reviews: 0,
       lessons: 31,
       students: 0,
-      description:
-        "সরাসরি ক্লাসে অংশগ্রহণ করে হাতে কলমে শিখুন HSC ICT। আমাদের নাগেশ্বরী কলেজ মোড় শাখায়।",
+      description: "সরাসরি ক্লাসে অংশগ্রহণ করে হাতে কলমে শিখুন HSC ICT...",
       instructor: "ictseba",
       category: "একাডেমিক কোর্স",
       oldPrice: "2,500.00",
@@ -134,8 +158,7 @@ const CourseSlider = () => {
       reviews: 0,
       lessons: 7,
       students: 0,
-      description:
-        "এই কোর্সে গ্রাফিক ডিজাইনের বেসিক বিষয়গুলো থেকে শুরু করে অ্যাডভান্সড বিষয়গুলো শেখানো হয়েছে ধাপে ধাপে, প্রজেক্ট ভিত্তিক।",
+      description: "এই কোর্সে গ্রাফিক ডিজাইনের বেসিক বিষয়গুলো...",
       instructor: "ictseba",
       category: "ক্যারিয়ার ডেভেলপমেন্ট",
       oldPrice: "2,500.00",
@@ -159,52 +182,83 @@ const CourseSlider = () => {
   ];
 
   return (
-    <div className="bg-[#FCF8F9] py-16 px-4 min-h-screen font-sans">
+    <div
+      ref={sectionRef}
+      className="bg-[#FCF8F9] py-16 px-4 min-h-screen font-sans relative overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <span className="bg-purple-100 text-purple-500 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+          <span className="animate-item inline-block bg-purple-100 text-purple-500 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
             একাডেমিক কোর্সসমূহ
           </span>
-          <h1 className="text-4xl font-bold text-gray-800 mt-4">
+          <h1 className="animate-item text-4xl font-bold text-gray-800 mt-4">
             চলমান কোর্সসমূহ
           </h1>
         </div>
 
-        <Swiper
-          slidesPerView={1}
-          spaceBetween={20}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          pagination={{
-            clickable: true,
-            dynamicBullets: true,
-          }}
-          // Set navigation to false
-          navigation={false}
-          breakpoints={{
-            640: { slidesPerView: 1, spaceBetween: 20 },
-            768: { slidesPerView: 2, spaceBetween: 30 },
-            1024: { slidesPerView: 3, spaceBetween: 30 },
-          }}
-          // Removed Navigation from modules
-          modules={[Pagination, Autoplay]}
-          className="mySwiper !pb-12"
-        >
-          {courses.map((course) => (
-            <SwiperSlide key={course.id}>
-              <CourseCard course={course} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="animate-item">
+          <Swiper
+            slidesPerView={1}
+            spaceBetween={20}
+            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            navigation={false}
+            breakpoints={{
+              640: { slidesPerView: 1, spaceBetween: 20 },
+              768: { slidesPerView: 2, spaceBetween: 30 },
+              1024: { slidesPerView: 3, spaceBetween: 30 },
+            }}
+            modules={[Pagination, Autoplay]}
+            className="mySwiper !pb-12"
+          >
+            {courses.map((course) => (
+              <SwiperSlide key={course.id}>
+                <CourseCard course={course} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
         <div className="flex justify-center mt-6">
-          <button className="btn btn-wide bg-gradient-to-r from-blue-600 to-purple-500 text-white border-none rounded-md hover:opacity-90 transition-opacity">
+          <button
+            onClick={toggleModal}
+            className="animate-item btn btn-wide bg-gradient-to-r from-blue-600 to-purple-500 text-white border-none rounded-md hover:opacity-90 transition-opacity active:scale-95"
+          >
             আরও দেখুন <ArrowRight size={18} className="ml-2" />
           </button>
         </div>
       </div>
+
+      {/* MODAL COMPONENT */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            onClick={toggleModal}
+          ></div>
+          <div className="relative bg-white rounded-3xl p-8 md:p-12 shadow-2xl max-w-sm w-full text-center animate-in zoom-in-95 duration-300">
+            <button
+              onClick={toggleModal}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X size={24} />
+            </button>
+            <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="text-blue-600" size={40} />
+            </div>
+            <h3 className="text-2xl font-black text-slate-800 mb-2">
+              Website Updated
+            </h3>
+            <p className="text-slate-500 font-medium text-lg">Coming Soon...</p>
+            <button
+              onClick={toggleModal}
+              className="mt-8 w-full py-3 bg-slate-900 text-white rounded-xl font-bold"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
