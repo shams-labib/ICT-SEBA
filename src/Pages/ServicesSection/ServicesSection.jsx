@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import {
   Globe,
   Monitor,
@@ -6,15 +6,21 @@ import {
   GraduationCap,
   ArrowUpRight,
 } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ServicesSection = () => {
+  const sectionRef = useRef(null);
+
   const services = [
     {
       title: "ডোমেইন ও হোস্টিং সার্ভিস",
       description:
         "আপনার ব্যবসা বা প্রজেক্টের জন্য নির্ভরযোগ্য ও সাশ্রয়ী ডোমেইন এবং হোস্টিং সলিউশন।",
       icon: <Globe className="w-8 h-8 text-orange-500" />,
-      bgColor: "bg-[#FFFDE7]", // Light yellow
+      bgColor: "bg-[#FFFDE7]",
       iconBg: "bg-orange-100",
     },
     {
@@ -22,7 +28,7 @@ const ServicesSection = () => {
       description:
         "ব্যবসার চাহিদা অনুযায়ী আধুনিক ও ইউজার-ফ্রেন্ডলি কাস্টম সফটওয়্যার তৈরি।",
       icon: <Monitor className="w-8 h-8 text-purple-500" />,
-      bgColor: "bg-[#F3E5F5]", // Light purple
+      bgColor: "bg-[#F3E5F5]",
       iconBg: "bg-purple-100",
     },
     {
@@ -30,21 +36,40 @@ const ServicesSection = () => {
       description:
         "কর্পোরেট, ই-কমার্স বা পার্সোনাল ওয়েবসাইট এবং অন্যান্য ডিজিটাল সলিউশন ডেভেলপমেন্ট।",
       icon: <Layout className="w-8 h-8 text-pink-500" />,
-      bgColor: "bg-[#FFEBEE]", // Light pink
+      bgColor: "bg-[#FFEBEE]",
       iconBg: "bg-pink-100",
     },
     {
       title: "অনলাইন ও অফলাইন আইটি কোর্স",
       description:
-        "শিক্ষার্থীদের জন্য বেসিক থেকে অ্যাডভান্সড লেভেলের কোর্স, অনলাইন ও অফলাইন উভয় মাধ্যমে।",
+        "শিক্ষার্থীদের জন্য বেসিক থেকে অ্যাডভান্সড লেভেলের কোর্স, অনলাইন ও অফলাইন উভয় মাধ্যমে।",
       icon: <GraduationCap className="w-8 h-8 text-blue-500" />,
-      bgColor: "bg-[#E3F2FD]", // Light blue
+      bgColor: "bg-[#E3F2FD]",
       iconBg: "bg-blue-100",
     },
   ];
 
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // কার্ডগুলোর অ্যানিমেশন
+      gsap.from(".service-card", {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-20 bg-white">
+    <section ref={sectionRef} className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header Section */}
         <div className="text-center mb-16">
@@ -61,7 +86,7 @@ const ServicesSection = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`${service.bgColor} p-8 rounded-2xl flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl`}
+              className={`service-card ${service.bgColor} p-8 rounded-2xl flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl`}
             >
               {/* Icon Container */}
               <div

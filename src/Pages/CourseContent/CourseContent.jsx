@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { PlayCircle, Lock, ChevronRight, ArrowRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CourseContent = () => {
+  const sectionRef = useRef(null);
+
   const modules = [
     {
       id: 1,
@@ -39,11 +45,54 @@ const CourseContent = () => {
     },
   ];
 
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // হেডার অ্যানিমেশন
+      gsap.from(".header-anim", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+        },
+      });
+
+      // বাম পাশের ভিডিও কার্ড (Left to Right)
+      gsap.from(".video-card-anim", {
+        x: -100,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+        },
+      });
+
+      // ডান পাশের মডিউলগুলো (Staggered Fade Up)
+      gsap.from(".module-anim", {
+        x: 100,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".module-container",
+          start: "top 80%",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-20">
+    <section ref={sectionRef} className="py-20 bg-[#FCF8F9]/50">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header Area */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div className="header-anim flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
               এইচএসসি কোর্স কনটেন্ট
@@ -65,7 +114,7 @@ const CourseContent = () => {
 
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Left Side: Video Preview Card */}
-          <div className="w-full lg:w-5/12">
+          <div className="video-card-anim w-full lg:w-5/12">
             <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 sticky top-10">
               <div className="relative aspect-video rounded-2xl overflow-hidden group cursor-pointer">
                 <img
@@ -92,15 +141,12 @@ const CourseContent = () => {
           </div>
 
           {/* Right Side: Accordion Content */}
-          <div className="w-full lg:w-7/12 space-y-4">
+          <div className="module-container w-full lg:w-7/12 space-y-4">
             {modules.map((module) => (
               <div
                 key={module.id}
-                className="collapse collapse-plus bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
+                className="module-anim collapse collapse-plus bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
               >
-                {/* বদল এখানে: type="radio" এর পরিবর্তে type="checkbox" করা হয়েছে। 
-                   এতে করে একই আইটেম ক্লিক করে খোলা এবং বন্ধ (toggle) করা যাবে।
-                */}
                 <input type="checkbox" defaultChecked={module.isOpen} />
 
                 <div className="collapse-title text-lg font-bold text-slate-700 py-5">
