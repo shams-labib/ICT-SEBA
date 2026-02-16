@@ -82,7 +82,7 @@ const Navbar = () => {
             </span>{" "}
             <span className="hidden md:flex">প্রোফাইল</span>
           </button>
-          <button className="btn btn-primary text-white px-6 hidden md:flex">
+          <button className="btn bg-gradient-to-r from-blue-600 to-purple-500  text-white px-6 hidden md:flex">
             লগইন
           </button>
           <button

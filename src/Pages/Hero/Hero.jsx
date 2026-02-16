@@ -1,14 +1,18 @@
-import { ArrowRight, Sparkles } from "lucide-react";
-import React from "react";
+import { ArrowRight, Sparkles, X } from "lucide-react";
+import React, { useState } from "react";
 
 const Hero = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
   return (
     <div className="relative min-h-[90vh] w-full flex items-center justify-center overflow-hidden bg-slate-50">
       {/* Decorative Background Elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
       <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 relative z-10 mt-10 md:mt-0">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           {/* Badge */}
           <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 border border-blue-100 shadow-sm">
@@ -19,7 +23,7 @@ const Hero = () => {
           {/* Main Title */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.2] mb-6">
             🚀 আপনার ডিজিটাল যাত্রা শুরু হোক{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-500 ">
               আইসিটিসেবার
             </span>{" "}
             সাথে
@@ -34,7 +38,11 @@ const Hero = () => {
 
           {/* Call to Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <button className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-blue-200 active:scale-95">
+            {/* Modal Trigger Button */}
+            <button
+              onClick={toggleModal}
+              className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-blue-200 active:scale-95"
+            >
               আরও জানুন
               <ArrowRight
                 size={22}
@@ -47,7 +55,7 @@ const Hero = () => {
             </button>
           </div>
 
-          {/* Trust Badges / Stats (Optional) */}
+          {/* Stats Section */}
           <div className="mt-16 flex flex-wrap justify-center gap-8 opacity-60">
             <div className="text-center">
               <p className="text-2xl font-bold text-slate-800">১০,০০০+</p>
@@ -66,6 +74,43 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      {/* --- MODAL SECTION --- */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop Blur/Darken */}
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
+            onClick={toggleModal}
+          ></div>
+
+          {/* Modal Content Card */}
+          <div className="relative bg-white rounded-3xl p-8 md:p-12 shadow-2xl max-w-sm w-full text-center transform transition-all animate-in zoom-in-95 duration-300">
+            <button
+              onClick={toggleModal}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <X size={24} />
+            </button>
+
+            <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="text-blue-600" size={40} />
+            </div>
+
+            <h3 className="text-2xl font-black text-slate-800 mb-2">
+              Website Updated
+            </h3>
+            <p className="text-slate-500 font-medium text-lg">Coming Soon...</p>
+
+            <button
+              onClick={toggleModal}
+              className="mt-8 w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
