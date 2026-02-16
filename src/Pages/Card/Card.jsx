@@ -1,0 +1,212 @@
+import React from "react";
+import { Star, BookOpen, Users, ShoppingCart, ArrowRight } from "lucide-react";
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+
+// Import required modules
+// Removed Navigation module
+import { Pagination, Autoplay } from "swiper/modules";
+
+const CourseCard = ({ course }) => {
+  return (
+    <div className="card w-full bg-white shadow-sm border border-gray-100 transition-all hover:shadow-md mb-10 h-full">
+      <figure className="relative h-48 overflow-hidden p-3 pb-0">
+        <img
+          src={course.image}
+          alt={course.title}
+          className="w-full h-full object-cover rounded-md"
+        />
+        {course.discount && (
+          <div className="absolute top-6 right-6 badge badge-secondary py-4 px-2 font-bold bg-violet-600 border-none shadow-lg z-10">
+            -{course.discount}%<br />
+            Off
+          </div>
+        )}
+      </figure>
+
+      <div className="card-body p-5">
+        <div className="flex items-center gap-1 text-orange-300 mb-1">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={14} fill="none" stroke="currentColor" />
+          ))}
+          <span className="text-gray-400 text-xs ml-1">
+            ({course.reviews} Reviews)
+          </span>
+        </div>
+
+        <h2 className="text-lg font-bold text-gray-800 leading-tight mb-3 h-14 line-clamp-2">
+          {course.title}
+        </h2>
+
+        <div className="flex gap-4 text-gray-400 text-xs mb-4">
+          <div className="flex items-center gap-1">
+            <BookOpen size={14} />
+            <span>{course.lessons} Lessons</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Users size={14} />
+            <span>{course.students} Student</span>
+          </div>
+        </div>
+
+        <p className="text-gray-500 text-sm mb-4 line-clamp-2 leading-relaxed">
+          {course.description}
+        </p>
+
+        <div className="flex items-center gap-2 mb-4">
+          <div className="avatar">
+            <div className="w-8 h-8 rounded-full">
+              <img src="https://via.placeholder.com/40" alt="avatar" />
+            </div>
+          </div>
+          <p className="text-xs text-gray-500">
+            By{" "}
+            <span className="text-gray-800 font-medium">
+              {course.instructor}
+            </span>{" "}
+            In{" "}
+            <span className="text-gray-800 font-medium">{course.category}</span>
+          </p>
+        </div>
+
+        <div className="divider my-0 opacity-50"></div>
+
+        <div className="card-actions justify-between items-center mt-3">
+          <div className="flex flex-col">
+            <span className="text-gray-400 line-through text-sm">
+              {course.oldPrice}৳
+            </span>
+            <span className="text-xl font-bold text-gray-800">
+              {course.price}৳
+            </span>
+          </div>
+          <button className="btn btn-ghost btn-sm text-gray-700 flex gap-2 normal-case font-semibold">
+            <ShoppingCart size={18} />
+            Add to cart
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CourseSlider = () => {
+  const courses = [
+    {
+      id: 1,
+      title: "এইচএসসি আইসিটি সম্পূর্ণ কোর্স - অনলাইন ব্যাচ",
+      image: "https://i.ibb.co.com/X9P1fXc/image.png",
+      reviews: 0,
+      lessons: 31,
+      students: 1,
+      description:
+        "ঘরে বসেই সহজে শিখুন HSC ICT এর পূর্ণ সিলেবাস। লাইভ ক্লাস, রেকর্ডেড ভিডিও...",
+      instructor: "ictseba",
+      category: "একাডেমিক কোর্স",
+      oldPrice: "1,500.00",
+      price: "1,199.00",
+      discount: 20,
+    },
+    {
+      id: 2,
+      title: "এইচএসসি আইসিটি সম্পূর্ণ কোর্স - অফলাইন ব্যাচ",
+      image: "https://i.ibb.co.com/X9P1fXc/image.png",
+      reviews: 0,
+      lessons: 31,
+      students: 0,
+      description:
+        "সরাসরি ক্লাসে অংশগ্রহণ করে হাতে কলমে শিখুন HSC ICT। আমাদের নাগেশ্বরী কলেজ মোড় শাখায়।",
+      instructor: "ictseba",
+      category: "একাডেমিক কোর্স",
+      oldPrice: "2,500.00",
+      price: "2,199.00",
+      discount: 12,
+    },
+    {
+      id: 3,
+      title: "Advanced graphic Design with Freelancing",
+      image: "https://i.ibb.co.com/X9P1fXc/image.png",
+      reviews: 0,
+      lessons: 7,
+      students: 0,
+      description:
+        "এই কোর্সে গ্রাফিক ডিজাইনের বেসিক বিষয়গুলো থেকে শুরু করে অ্যাডভান্সড বিষয়গুলো শেখানো হয়েছে ধাপে ধাপে, প্রজেক্ট ভিত্তিক।",
+      instructor: "ictseba",
+      category: "ক্যারিয়ার ডেভেলপমেন্ট",
+      oldPrice: "2,500.00",
+      price: "2,000.00",
+      discount: 20,
+    },
+    {
+      id: 4,
+      title: "Web Development with MERN Stack",
+      image: "https://i.ibb.co.com/X9P1fXc/image.png",
+      reviews: 12,
+      lessons: 45,
+      students: 15,
+      description: "শিখুন ফুল স্ট্যাক ওয়েব ডেভেলপমেন্ট একদম জিরো থেকে।",
+      instructor: "ictseba",
+      category: "ক্যারিয়ার ডেভেলপমেন্ট",
+      oldPrice: "5,000.00",
+      price: "3,500.00",
+      discount: 30,
+    },
+  ];
+
+  return (
+    <div className="bg-[#FCF8F9] py-16 px-4 min-h-screen font-sans">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <span className="bg-purple-100 text-purple-500 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+            একাডেমিক কোর্সসমূহ
+          </span>
+          <h1 className="text-4xl font-bold text-gray-800 mt-4">
+            চলমান কোর্সসমূহ
+          </h1>
+        </div>
+
+        <Swiper
+          slidesPerView={1}
+          spaceBetween={20}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+            dynamicBullets: true,
+          }}
+          // Set navigation to false
+          navigation={false}
+          breakpoints={{
+            640: { slidesPerView: 1, spaceBetween: 20 },
+            768: { slidesPerView: 2, spaceBetween: 30 },
+            1024: { slidesPerView: 3, spaceBetween: 30 },
+          }}
+          // Removed Navigation from modules
+          modules={[Pagination, Autoplay]}
+          className="mySwiper !pb-12"
+        >
+          {courses.map((course) => (
+            <SwiperSlide key={course.id}>
+              <CourseCard course={course} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        <div className="flex justify-center mt-6">
+          <button className="btn btn-wide bg-gradient-to-r from-blue-600 to-purple-500 text-white border-none rounded-md hover:opacity-90 transition-opacity">
+            আরও দেখুন <ArrowRight size={18} className="ml-2" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CourseSlider;
