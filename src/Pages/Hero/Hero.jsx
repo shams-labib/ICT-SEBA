@@ -1,6 +1,7 @@
 import { ArrowRight, Sparkles, X } from "lucide-react";
-import React, { useState, useLayoutEffect, useRef } from "react";
+import React, { useState, useLayoutEffect, useRef, useContext } from "react";
 import gsap from "gsap"; // Make sure to install gsap: npm install gsap
+import { AuthContext } from "../../Firebase/Authentication/AuthContext";
 
 const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
