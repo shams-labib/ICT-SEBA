@@ -14,10 +14,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import { AuthContext } from "../../Firebase/Authentication/AuthContext";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
   const navLinks = [
     { name: "হোম", href: "/" },
@@ -26,6 +27,10 @@ const Navbar = () => {
     { name: "কোর্সসমূহ", href: "#" },
     { name: "যোগাযোগ", href: "#" },
   ];
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="bg-white shadow-md sticky top-0 z-50">
@@ -81,7 +86,7 @@ const Navbar = () => {
           </button>
 
           {user ? (
-            <Link to={'/profile'} className="btn btn-ghost items-center gap-2">
+            <Link to={"/profile"} className="btn btn-ghost items-center gap-2">
               <span>
                 <User size={20} />
               </span>{" "}
