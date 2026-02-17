@@ -47,7 +47,7 @@ const Navbar = () => {
               role="button"
               className="btn bg-gray-100 border-gray-200 rounded-full px-4"
             >
-              Category
+              ক্যাটাগরি
             </div>
             <ul
               tabIndex={0}
