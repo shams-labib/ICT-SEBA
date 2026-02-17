@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../../assets/ictseba-logo.png";
 import {
   ShoppingCart,
@@ -13,9 +13,11 @@ import {
   Instagram,
 } from "lucide-react";
 import { Link } from "react-router";
+import { AuthContext } from "../../Firebase/Authentication/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const navLinks = [
     { name: "হোম", href: "/" },
@@ -77,18 +79,22 @@ const Navbar = () => {
               0
             </span>
           </button>
-          <button className="btn btn-ghost items-center gap-2">
-            <span>
-              <User size={20} />
-            </span>{" "}
-            <span className="hidden md:flex">প্রোফাইল</span>
-          </button>
-          <Link
-            to={"/login"}
-            className="btn bg-gradient-to-r from-blue-600 to-purple-500  text-white px-6 hidden md:flex"
-          >
-            লগইন
-          </Link>
+
+          {user ? (
+            <Link to={'/profile'} className="btn btn-ghost items-center gap-2">
+              <span>
+                <User size={20} />
+              </span>{" "}
+              <span className="hidden md:flex">প্রোফাইল</span>
+            </Link>
+          ) : (
+            <Link
+              to={"/login"}
+              className="btn bg-gradient-to-r from-blue-600 to-purple-500  text-white px-6 hidden md:flex"
+            >
+              লগইন
+            </Link>
+          )}
           <button
             onClick={() => setIsOpen(true)}
             className="lg:hidden text-gray-700"

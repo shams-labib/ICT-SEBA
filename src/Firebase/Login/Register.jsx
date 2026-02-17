@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../Authentication/AuthContext";
 import Swal from "sweetalert2";
 
@@ -11,6 +11,7 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
     googleLogin()
@@ -20,6 +21,7 @@ const Register = () => {
           text: "Conggrass you are now a ict-seba member!",
           icon: "success",
         });
+        navigate("/");
       })
       .catch(() => {
         Swal.fire({
@@ -39,6 +41,7 @@ const Register = () => {
           text: "Conggrass you are now a ict-seba member!",
           icon: "success",
         });
+        navigate("/");
       })
       .catch(() => {
         Swal.fire({
