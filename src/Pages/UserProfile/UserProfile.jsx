@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   User,
   Mail,
@@ -12,8 +12,34 @@ import {
   Award,
   Clock,
 } from "lucide-react";
+import { AuthContext } from "../../Firebase/Authentication/AuthContext";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const UserProfile = () => {
+  const navigate = useNavigate();
+  const { logOutUser } = useContext(AuthContext);
+  const handleLogout = () => {
+    logOutUser()
+      .then(
+        () =>
+          Swal.fire({
+            title: "Log Out Success!",
+            text: "You clicked the button!",
+            icon: "success",
+          }),
+        navigate("/"),
+      )
+      .catch(
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          footer: '<a href="#">Why do I have this issue?</a>',
+        }),
+      );
+  };
+
   // ডামি ইউজার ডেটা
   const user = {
     name: "মেহেদী হাসান",
@@ -72,7 +98,10 @@ const UserProfile = () => {
                 <button className="btn btn-primary btn-sm normal-case gap-2">
                   <Settings size={16} /> সেটিংস
                 </button>
-                <button className="btn btn-ghost btn-sm text-error border-error/20 hover:bg-error/10 gap-2">
+                <button
+                  onClick={() => handleLogout()}
+                  className="btn btn-ghost btn-sm text-error border-error/20 hover:bg-error/10 gap-2"
+                >
                   <LogOut size={16} /> লগআউট
                 </button>
               </div>
