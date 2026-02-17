@@ -3,6 +3,7 @@ import { AuthContext } from "./AuthContext";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "../Config file/_firebase.init";
@@ -16,6 +17,10 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
+  const loginUser = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
   const googleLogin = async () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
@@ -24,6 +29,7 @@ const AuthProvider = ({ children }) => {
   const info = {
     googleLogin,
     createUser,
+    loginUser,
   };
 
   return <AuthContext value={info}>{children}</AuthContext>;
