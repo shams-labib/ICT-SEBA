@@ -184,7 +184,7 @@ const CourseSlider = () => {
   return (
     <div
       ref={sectionRef}
-      className="bg-[#FCF8F9] py-16 px-4 min-h-screen font-sans relative overflow-hidden"
+      className=" py-16 px-4 min-h-screen font-sans relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">

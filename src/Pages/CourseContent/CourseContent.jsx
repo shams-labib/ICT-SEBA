@@ -46,50 +46,58 @@ const CourseContent = () => {
   ];
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // হেডার অ্যানিমেশন
-      gsap.from(".header-anim", {
-        y: 30,
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      // ডেক্সটপ এনিমেশন: সাইড থেকে আসবে
+      gsap.from(".video-card-anim", {
+        x: -80,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
+      });
+
+      gsap.from(".module-anim", {
+        x: 80,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".module-container", start: "top 80%" },
+      });
+    });
+
+    mm.add("(max-width: 1023px)", () => {
+      // মোবাইল এনিমেশন: সাইড থেকে না এসে নিচ থেকে আসবে (রেসপন্সিভ ফিক্স)
+      gsap.from(".video-card-anim, .module-anim", {
+        y: 40,
         opacity: 0,
         duration: 0.8,
+        stagger: 0.1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 85%",
         },
       });
+    });
 
-      // বাম পাশের ভিডিও কার্ড (Left to Right)
-      gsap.from(".video-card-anim", {
-        x: -100,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
-      });
+    // হেডার সব ডিভাইসেই একই থাকবে
+    gsap.from(".header-anim", {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      scrollTrigger: { trigger: sectionRef.current, start: "top 90%" },
+    });
 
-      // ডান পাশের মডিউলগুলো (Staggered Fade Up)
-      gsap.from(".module-anim", {
-        x: 100,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".module-container",
-          start: "top 80%",
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-[#FCF8F9]/50">
+    // overflow-hidden যোগ করা হয়েছে যাতে কোনোভাবেই সাইড স্ক্রল না আসে
+    <section ref={sectionRef} className="py-20 bg-[#FCF8F9]/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header Area */}
         <div className="header-anim flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -107,7 +115,7 @@ const CourseContent = () => {
               <span>⏱️ 90h total length</span>
             </div>
           </div>
-          <button className="flex items-center gap-2 text-slate-800 font-bold hover:text-blue-600 transition-colors">
+          <button className="flex items-center gap-2 text-slate-800 font-bold hover:text-blue-600 transition-colors w-fit">
             সকল মডিউল দেখুন <ChevronRight size={20} />
           </button>
         </div>
@@ -115,7 +123,7 @@ const CourseContent = () => {
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Left Side: Video Preview Card */}
           <div className="video-card-anim w-full lg:w-5/12">
-            <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 sticky top-10">
+            <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 lg:sticky lg:top-10">
               <div className="relative aspect-video rounded-2xl overflow-hidden group cursor-pointer">
                 <img
                   src="https://i.ibb.co.com/X9P1fXc/image.png"
@@ -131,7 +139,6 @@ const CourseContent = () => {
                   </div>
                 </div>
               </div>
-
               <div className="mt-6">
                 <button className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-blue-200 transition-all flex items-center justify-center gap-2">
                   Purchase Now <ArrowRight size={20} />
@@ -148,11 +155,9 @@ const CourseContent = () => {
                 className="module-anim collapse collapse-plus bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden"
               >
                 <input type="checkbox" defaultChecked={module.isOpen} />
-
                 <div className="collapse-title text-lg font-bold text-slate-700 py-5">
                   {module.title}
                 </div>
-
                 <div className="collapse-content px-0">
                   <div className="border-t border-slate-50 pt-2">
                     {module.lessons.length > 0 ? (

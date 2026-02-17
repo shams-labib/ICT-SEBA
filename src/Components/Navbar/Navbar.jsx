@@ -18,7 +18,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: "হোম", href: "#" },
+    { name: "হোম", href: "/" },
     { name: "আমাদের সম্পর্কে", href: "#" },
     { name: "সার্ভিসসমূহ", href: "#" },
     { name: "কোর্সসমূহ", href: "#" },
