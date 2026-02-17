@@ -12,6 +12,7 @@ import {
   Linkedin,
   Instagram,
 } from "lucide-react";
+import { Link } from "react-router";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,9 +83,12 @@ const Navbar = () => {
             </span>{" "}
             <span className="hidden md:flex">প্রোফাইল</span>
           </button>
-          <button className="btn bg-gradient-to-r from-blue-600 to-purple-500  text-white px-6 hidden md:flex">
+          <Link
+            to={"/login"}
+            className="btn bg-gradient-to-r from-blue-600 to-purple-500  text-white px-6 hidden md:flex"
+          >
             লগইন
-          </button>
+          </Link>
           <button
             onClick={() => setIsOpen(true)}
             className="lg:hidden text-gray-700"
