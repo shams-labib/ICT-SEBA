@@ -36,9 +36,11 @@ const Navbar = () => {
     <div className="bg-white shadow-md sticky top-0 z-50">
       {/* --- Main Navbar Desktop/Tablet --- */}
       <div className="flex justify-between items-center px-4 md:px-8 py-3 max-w-7xl mx-auto">
-        {/* Left: Hamburger (Mobile) + Logo */}
+        {/* Left: Logo + Category */}
         <div className="flex items-center gap-4">
-          <img className="w-24 md:w-32" src={logo} alt="ICTSEBA Logo" />
+          <Link to="/">
+            <img className="w-24 md:w-32" src={logo} alt="ICTSEBA Logo" />
+          </Link>
 
           {/* Category Dropdown (Desktop Only) */}
           <div className="dropdown hidden lg:block">
@@ -85,24 +87,33 @@ const Navbar = () => {
             </span>
           </button>
 
+          {/* Auth Button Logic */}
           {user ? (
-            <Link to={"/profile"} className="btn btn-ghost items-center gap-2">
-              <span>
-                <User size={20} />
-              </span>{" "}
-              <span className="hidden md:flex">প্রোফাইল</span>
+            <Link
+              to={"/profile"}
+              className="btn btn-ghost btn-circle md:btn-ghost md:w-auto md:px-4 flex items-center gap-2"
+            >
+              <span className="text-blue-600">
+                <User size={22} />
+              </span>
+              {/* শুধুমাত্র ডেস্কটপে লেখা দেখাবে */}
+              <span className="hidden md:inline">প্রোফাইল</span>
             </Link>
           ) : (
             <Link
               to={"/login"}
-              className="btn bg-gradient-to-r from-blue-600 to-purple-500  text-white px-6 hidden md:flex"
+              className="btn bg-gradient-to-r from-blue-600 to-purple-500 text-white border-none min-h-0 h-10 w-10 md:w-auto p-0 md:px-6 rounded-full flex items-center justify-center gap-2"
             >
-              লগইন
+              <User size={20} />
+              {/* শুধুমাত্র ডেস্কটপে লেখা দেখাবে */}
+              <span className="hidden md:inline">লগইন</span>
             </Link>
           )}
+
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(true)}
-            className="lg:hidden text-gray-700"
+            className="lg:hidden text-gray-700 p-1 hover:bg-gray-100 rounded-lg"
           >
             <Menu size={28} />
           </button>
@@ -113,17 +124,15 @@ const Navbar = () => {
       <div
         className={`fixed inset-0 z-[60] transition-visibility ${isOpen ? "visible" : "invisible"}`}
       >
-        {/* Dark Backdrop */}
         <div
           className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
           onClick={() => setIsOpen(false)}
         />
 
-        {/* Drawer Content */}
         <div
           className={`absolute left-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out p-6 flex flex-col ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
-          {/* Drawer Header */}
+          {/* Drawer Content Same as before */}
           <div className="flex justify-between items-start mb-6">
             <img className="w-28" src={logo} alt="Logo" />
             <button
@@ -135,24 +144,20 @@ const Navbar = () => {
           </div>
 
           <p className="text-gray-500 text-sm mb-6">
-            Histudy is a education website template. You can customize all.
+            ICT-SEBA-তে আপনাকে স্বাগতম! আপনার দক্ষতার বিকাশ করুন আমাদের সাথে।
           </p>
 
-          {/* Contact Info */}
-          <div className="space-y-3 mb-8">
+          <div className="space-y-3 mb-8 border-b pb-6">
             <div className="flex items-center gap-3 text-gray-600 text-sm">
               <Mail size={16} className="text-blue-500" />
-              <span>example@gmail.com</span>
+              <span>info@ictseba.com</span>
             </div>
             <div className="flex items-center gap-3 text-gray-600 text-sm">
               <Phone size={16} className="text-blue-500" />
-              <span>+1-202-555-0174</span>
+              <span>+880123456789</span>
             </div>
           </div>
 
-          <hr className="mb-6" />
-
-          {/* Mobile Nav Links */}
           <nav className="flex flex-col space-y-4 mb-8">
             {navLinks.map((link) => (
               <a
@@ -165,12 +170,10 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Enroll Button */}
-          <button className="btn btn-outline btn-primary rounded-full w-full mb-8 normal-case text-lg">
+          <button className="btn btn-primary bg-blue-600 border-none rounded-full w-full mb-8 normal-case text-lg">
             এখনই এনরোল করো
           </button>
 
-          {/* Social Links */}
           <div className="mt-auto">
             <span className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-4">
               Find With Us
