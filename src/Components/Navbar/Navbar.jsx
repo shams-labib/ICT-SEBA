@@ -120,7 +120,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* --- Mobile Responsive Drawer Overlay --- */}
+      {/* --- Mobile Responsive Drawer  --- */}
       <div
         className={`fixed inset-0 z-[60] transition-visibility ${isOpen ? "visible" : "invisible"}`}
       >
