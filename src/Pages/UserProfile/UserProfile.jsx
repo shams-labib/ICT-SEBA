@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   User,
   Mail,
@@ -13,55 +13,62 @@ import {
   Clock,
 } from "lucide-react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"; // ✅ corrected import
 import useAxiosSecure from "../../Components/Hooks/AxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../../Firebase/Authentication/AuthContext";
 
 const UserProfile = () => {
-  const navigate = useNavigate();
+  const { user, logOutUser } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
-  // Fetch user data from backend using email query
-  const {
-    data: userData,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["users"],
+  const { data: profileData, isLoading } = useQuery({
+    queryKey: ["userProfile", user?.email],
     queryFn: async () => {
-      // Replace this with the actual logged-in user email
-      const email = "shamsallabib@gmail.com";
-      const res = await axiosSecure.get(`/user?email=${email}`);
+      if (!user?.email) return null;
+      const res = await axiosSecure.get(`/user?email=${user.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
-  if (isLoading) return <p>Loading...</p>;
-
-  const handleLogout = () => {
-    Swal.fire({
-      title: "Log Out Success!",
-      text: "You clicked the button!",
-      icon: "success",
-    }).then(() => navigate("/"));
+  const userData = {
+    name: user?.displayName || profileData.name || "User Name",
+    email: user?.email || profileData.email,
+    phone: user?.phone || profileData?.phone || "017840000",
+    photoURL:
+      user?.photoURL ||
+      profileData.photoURL ||
+      "https://i.ibb.co/5GzXkwq/user.png",
   };
 
-  // Dummy stats (can also fetch from backend)
+  const handleLogout = () => {
+    logOutUser().then(() => {
+      Swal.fire("Logged out!", "You have successfully logged out.", "success");
+      navigate("/");
+    });
+  };
+
+  if (isLoading) return <p>Loading profile...</p>;
+  if (!userData) return <p>No user data found</p>;
+
+  // ✅ Added stats array
   const stats = [
     {
       label: "কোর্স সম্পন্ন",
-      value: "১২",
-      icon: <BookOpen size={20} className="text-blue-500" />,
+      value: userData?.completedCourses || 5,
+      icon: <Award size={18} className="text-yellow-500" />,
     },
     {
-      label: "পয়েন্টস",
-      value: "৪৫০",
-      icon: <Award size={20} className="text-yellow-500" />,
+      label: "মোট ক্লাস",
+      value: userData?.totalClasses || 20,
+      icon: <BookOpen size={18} className="text-purple-500" />,
     },
     {
-      label: "স্টাডি টাইম",
-      value: "৮০ ঘণ্টা",
-      icon: <Clock size={20} className="text-purple-500" />,
+      label: "সময় ব্যয়",
+      value: userData?.studyHours || "35h",
+      icon: <Clock size={18} className="text-blue-500" />,
     },
   ];
 
@@ -166,7 +173,7 @@ const UserProfile = () => {
               </p>
             </div>
 
-            {/* Ongoing Course (Example) */}
+            {/* Ongoing Course */}
             <div className="card bg-white p-6 shadow-md border border-slate-100">
               <h2 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                 <BookOpen size={18} className="text-purple-500" /> বর্তমান কোর্স
