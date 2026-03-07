@@ -53,6 +53,7 @@ const Register = () => {
     formData.append("image", profileImg);
     const res = await axios.post(image_url, formData);
     const photoURL = res.data.data.url;
+
     const userInfo = {
       email: data.email,
       name: data.name,

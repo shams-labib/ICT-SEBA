@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   User,
   Mail,
@@ -12,61 +12,58 @@ import {
   Award,
   Clock,
 } from "lucide-react";
-import { AuthContext } from "../../Firebase/Authentication/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import useAxiosSecure from "../../Components/Hooks/AxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const UserProfile = () => {
   const navigate = useNavigate();
-  const { logOutUser } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+
+  // Fetch user data from backend using email query
+  const {
+    data: userData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      // Replace this with the actual logged-in user email
+      const email = "shamsallabib@gmail.com";
+      const res = await axiosSecure.get(`/user?email=${email}`);
+      return res.data;
+    },
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+
   const handleLogout = () => {
-    logOutUser()
-      .then(
-        () =>
-          Swal.fire({
-            title: "Log Out Success!",
-            text: "You clicked the button!",
-            icon: "success",
-          }),
-        navigate("/"),
-      )
-      .catch(
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!",
-          footer: '<a href="#">Why do I have this issue?</a>',
-        }),
-      );
+    Swal.fire({
+      title: "Log Out Success!",
+      text: "You clicked the button!",
+      icon: "success",
+    }).then(() => navigate("/"));
   };
 
-  // ডামি ইউজার ডেটা
-  const user = {
-    name: "মেহেদী হাসান",
-    email: "mehedi@example.com",
-    phone: "+880 1700-000000",
-    location: "ঢাকা, বাংলাদেশ",
-    joined: "জানুয়ারি ২০২৪",
-    bio: "HSC পরীক্ষার্থী | আইসিটি এবং প্রোগ্রামিং নিয়ে শিখতে ভালোবাসি।",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mehedi",
-    stats: [
-      {
-        label: "কোর্স সম্পন্ন",
-        value: "১২",
-        icon: <BookOpen size={20} className="text-blue-500" />,
-      },
-      {
-        label: "পয়েন্টস",
-        value: "৪৫০",
-        icon: <Award size={20} className="text-yellow-500" />,
-      },
-      {
-        label: "স্টাডি টাইম",
-        value: "৮০ ঘণ্টা",
-        icon: <Clock size={20} className="text-purple-500" />,
-      },
-    ],
-  };
+  // Dummy stats (can also fetch from backend)
+  const stats = [
+    {
+      label: "কোর্স সম্পন্ন",
+      value: "১২",
+      icon: <BookOpen size={20} className="text-blue-500" />,
+    },
+    {
+      label: "পয়েন্টস",
+      value: "৪৫০",
+      icon: <Award size={20} className="text-yellow-500" />,
+    },
+    {
+      label: "স্টাডি টাইম",
+      value: "৮০ ঘণ্টা",
+      icon: <Clock size={20} className="text-purple-500" />,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
@@ -78,7 +75,7 @@ const UserProfile = () => {
             <div className="relative flex flex-col sm:flex-row items-center sm:items-end -mt-16 gap-4">
               <div className="relative group">
                 <div className="avatar ring ring-white ring-offset-base-100 ring-offset-2 rounded-full overflow-hidden w-32 h-32 bg-white">
-                  <img src={user.avatar} alt="Profile" />
+                  <img src={userData?.photoURL} alt="Profile" />
                 </div>
                 <button className="absolute bottom-2 right-2 p-2 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-colors border border-slate-200">
                   <Camera size={16} className="text-slate-600" />
@@ -87,10 +84,10 @@ const UserProfile = () => {
 
               <div className="flex-1 text-center sm:text-left mb-2">
                 <h1 className="text-2xl font-bold text-slate-800">
-                  {user.name}
+                  {userData?.name}
                 </h1>
                 <p className="text-slate-500 text-sm flex items-center justify-center sm:justify-start gap-1">
-                  <MapPin size={14} /> {user.location}
+                  <MapPin size={14} /> {userData?.location || "ঢাকা, বাংলাদেশ"}
                 </p>
               </div>
 
@@ -99,7 +96,7 @@ const UserProfile = () => {
                   <Settings size={16} /> সেটিংস
                 </button>
                 <button
-                  onClick={() => handleLogout()}
+                  onClick={handleLogout}
                   className="btn btn-ghost btn-sm text-error border-error/20 hover:bg-error/10 gap-2"
                 >
                   <LogOut size={16} /> লগআউট
@@ -118,7 +115,7 @@ const UserProfile = () => {
                 অ্যাক্টিভিটি স্ট্যাটাস
               </h2>
               <div className="space-y-4">
-                {user.stats.map((stat, index) => (
+                {stats.map((stat, index) => (
                   <div
                     key={index}
                     className="flex items-center gap-4 p-3 rounded-xl bg-slate-50 border border-slate-100"
@@ -141,15 +138,17 @@ const UserProfile = () => {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm text-slate-600">
                   <Mail size={16} className="text-slate-400" />
-                  <span>{user.email}</span>
+                  <span>{userData?.email}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-slate-600">
                   <Phone size={16} className="text-slate-400" />
-                  <span>{user.phone}</span>
+                  <span>{userData?.phone}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-slate-600">
                   <Calendar size={16} className="text-slate-400" />
-                  <span>জয়েন করেছেন: {user.joined}</span>
+                  <span>
+                    জয়েন করেছেন: {userData?.joined || "জানুয়ারি ২০২৪"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -163,7 +162,7 @@ const UserProfile = () => {
                 <User size={18} className="text-blue-500" /> বায়ো
               </h2>
               <p className="text-slate-600 text-sm leading-relaxed">
-                {user.bio}
+                {userData?.bio || "প্রফাইল বায়ো নেই।"}
               </p>
             </div>
 
