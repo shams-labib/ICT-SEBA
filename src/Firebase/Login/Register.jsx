@@ -5,6 +5,7 @@ import { AuthContext } from "../Authentication/AuthContext";
 import Swal from "sweetalert2";
 import { User, Mail, Phone, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
 import useAxiosSecure from "../../Components/Hooks/AxiosSecure";
+import axios from "axios";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,12 +45,20 @@ const Register = () => {
       });
   };
 
-  const handleRegister = (data) => {
+  const handleRegister = async (data) => {
+    const profileImg = data.photo[0];
+    const image_url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_img_host}`;
+
+    const formData = new FormData();
+    formData.append("image", profileImg);
+    const res = await axios.post(image_url, formData);
+    const photoURL = res.data.data.url;
     const userInfo = {
       email: data.email,
       name: data.name,
       password: data.password,
       phone: data.phone,
+      photoURL: photoURL,
     };
 
     createUser(data.email, data.password)
@@ -58,9 +67,7 @@ const Register = () => {
           icon: "success",
           title: "ICT-SEBA-তে আপনাকে স্বাগতম!",
         });
-
         axiosSecure.post("/user", userInfo);
-
         navigate("/");
       })
       .catch((error) => {
@@ -113,6 +120,29 @@ const Register = () => {
               {errors.name && (
                 <span className="text-error text-xs mt-1">
                   {errors.name.message}
+                </span>
+              )}
+            </div>
+
+            {/* Photo field */}
+
+            <div className="form-control md:col-span-2">
+              <label className="label text-xs font-bold uppercase text-slate-500 tracking-wider">
+                Photo
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3 flex items-center text-slate-400">
+                  <User size={18} />
+                </span>
+                <input
+                  {...register("photo", { required: "Photo is required" })}
+                  type="file"
+                  className="input input-bordered w-full pl-10 focus:ring-2 focus:ring-purple-200 outline-none"
+                />
+              </div>
+              {errors.photo && (
+                <span className="text-error text-xs mt-1">
+                  {errors.photo.message}
                 </span>
               )}
             </div>
