@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../Authentication/AuthContext";
 import Swal from "sweetalert2";
 import { User, Mail, Phone, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
+import useAxiosSecure from "../../Components/Hooks/AxiosSecure";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { createUser, googleLogin } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
@@ -43,12 +45,22 @@ const Register = () => {
   };
 
   const handleRegister = (data) => {
+    const userInfo = {
+      email: data.email,
+      name: data.name,
+      password: data.password,
+      phone: data.phone,
+    };
+
     createUser(data.email, data.password)
       .then(() => {
         Toast.fire({
           icon: "success",
           title: "ICT-SEBA-তে আপনাকে স্বাগতম!",
         });
+
+        axiosSecure.post("/user", userInfo);
+
         navigate("/");
       })
       .catch((error) => {
